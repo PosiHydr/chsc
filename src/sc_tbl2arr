@@ -1,0 +1,41 @@
+#! /bin/env bash
+
+# Convert syscall table to char*[] which indexes
+# are syscall numbers and values are syscall names
+
+if (($# != 2)); then
+    echo "Usage: $0 <*.tbl> <*.c>" >& 2
+    exit 1
+fi
+
+if [ ! -e $1 ]; then
+    echo "File \"$1\" not found" >& 2
+    exit 1
+fi
+
+if [ ! -r $1 ]; then
+    echo "File \"$1\" cannot be read" >& 2
+    exit 1
+fi
+
+sed 's/#.*//g;/^\s*$/d;' $1 > $2.tmp
+echo "char* scname[#] = {" > $2
+pwn=0
+nlines=$(wc -l < $2.tmp)
+
+for ((i=1; i<=nlines; i++)); do
+    items=($(sed -n "${i}p" $2.tmp))
+    while [ ${pwn} != ${items[0]} ]; do
+        echo -e "\t0," >> $2
+        ((pwn++))
+    done
+    echo -e "\t\"${items[2]}\"," >> $2
+    ((pwn++))
+    if ((i == nlines)); then
+        sed -i "1s/#/${pwn}/;$((${pwn} + 1))s/,\$//" $2
+    fi
+done
+
+echo "};" >> $2
+rm $2.tmp
+exit 0

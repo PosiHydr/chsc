@@ -1,0 +1,17 @@
+bin
+#src/scname.c
+#src/syscall_64.tbl
+test/hw
+test/hw2
+test/hw4
+test/hwx
+test/*.so
+.c_bin
+.lightly
+.classes
+logs
+*.log
+node_modules
+dist
+dist-ssr
+*.local
