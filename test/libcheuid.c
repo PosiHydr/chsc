@@ -7,7 +7,10 @@ uid_t euid_tar;
 int chsc_init(int argc, char** argv, char** envp)
 {
     if (argc != 1)
-        return -1;
+    {
+        fprintf(stderr, "libcheuid.so: Has only an argument\n");
+        return EINVAL;
+    }
     euid_tar = MEatoi(argv[0]);
     return 0;
 }

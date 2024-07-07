@@ -1,6 +1,5 @@
 #include <unistd.h>
 #include <pthread.h>
-#include <sys/types.h>
 
 void* thd(void* arg)
 {

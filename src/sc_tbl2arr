@@ -1,4 +1,4 @@
-#! /bin/env bash
+#! /usr/bin/env bash
 
 # Convert syscall table to char*[] which indexes
 # are syscall numbers and values are syscall names
