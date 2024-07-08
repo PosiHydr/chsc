@@ -1,6 +1,6 @@
 #include "../include/chsc.h"
 
-#include "scname.c"
+#include "../arch/scname.c"
 #include "chsc_detach.c"
 #include "chsc_thread.c"
 
@@ -8,7 +8,7 @@ int main(int argc, char** argv, char** envp)
 {
 /*
 argc = 3;
-char* nargv[] = {"/workspace/chsc/.c_bin/chsc", "test/libchsc_test.so", "test/hwx", 0};
+char* nargv[] = {"/workspace/chsc/.c_bin/chsc", "test/libtrace_wrtie.so", "test/hwx", 0};
 argv = nargv;
 */
 

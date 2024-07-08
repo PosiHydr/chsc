@@ -3,6 +3,9 @@
 
 #include "../include/merr.h"
 
+#include <elf.h>
+#include <sys/uio.h>
+#include <sys/user.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/ptrace.h>

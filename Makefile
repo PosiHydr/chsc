@@ -4,19 +4,19 @@ bin/chsc: bin src/chsc.c
 bin:
 		mkdir bin
 
-src/chsc.c: include/chsc.h src/scname.c src/chsc_detach.c src/chsc_thread.c
+src/chsc.c: include/chsc.h arch/scname.c src/chsc_detach.c src/chsc_thread.c
 
 include/chsc.h: include/arch.h include/merr.h
 
-src/scname.c: src/sc_tbl2arr src/syscall.tbl
-		bash src/sc_tbl2arr src/syscall.tbl src/scname.c
+arch/scname.c: src/gen_scname arch
+		bash src/gen_scname arch arch/scname.c
 
 src/chsc_detach.c: include/chsc.h
 
 src/chsc_thread.c: include/chsc.h
 
 .PHONY: test
-test: bin/chsc test/hw test/hw2 test/hw4 test/hwx test/libcheuid.so test/libchsc_test.so
+test: test/hw test/hw2 test/hw4 test/hwx test/libcheuid.so test/libtrace_write.so
 
 test/hw: test/hw.c
 		gcc test/hw.c -Wall -o test/hw
@@ -33,12 +33,12 @@ test/hwx: test/hwx.c
 test/libcheuid.so: test/libcheuid.c
 		gcc test/libcheuid.c -Wall -fPIC -shared -o test/libcheuid.so
 
-test/libchsc_test.so: test/libchsc_test.c
-		gcc test/libchsc_test.c -Wall -fPIC -shared -o test/libchsc_test.so
+test/libtrace_write.so: test/libtrace_write.c
+		gcc test/libtrace_write.c -Wall -fPIC -shared -o test/libtrace_write.so
 
 test/libcheuid.c: test/chsc_dev.h
 
-test/libchsc_test.c: test/chsc_dev.h
+test/libtrace_write.c: test/chsc_dev.h
 
 test/chsc_dev.h: include/merr.h
 
@@ -47,4 +47,4 @@ all: bin/chsc test
 
 .PHONY: clean
 clean:
-		rm -rf bin src/scname.c test/hw test/hw2 test/hw4 test/hwx test/libcheuid.so test/libchsc_test.so
+		rm -rf arch/scname.c bin test/hw test/hw2 test/hw4 test/hwx test/libcheuid.so test/libtrace_write.so

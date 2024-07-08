@@ -3,11 +3,11 @@
 # Replace 8 spaces to a tab
 
 if (($# != 2)); then
-    echo "Usage: $0 <*.tbl> <*.c>" >& 2
+    echo "Usage: $0 <*_8spc> <*>" >& 2
     exit 1
 fi
 
-if [ ! -e $1 ]; then
+if [ ! -f $1 ]; then
     echo "File \"$1\" not found" >& 2
     exit 1
 fi
