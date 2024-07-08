@@ -18,6 +18,11 @@ if [ ! -d $1 ]; then
     exit 1
 fi
 
+if [ ! -x $1 ]; then
+    echo "Architecture directory \"$1\" cannot be execved" >& 2
+    exit 1
+fi
+
 arch="#"
 mach=$(uname -m)
 nlines=$(wc -l < $1/${MACH_ARCH_BITS_TBL})
