@@ -18,13 +18,13 @@ char* nargv[] = {"/workspace/chsc/.c_bin/chsc", "1", ":", "/workspace/chsc/test/
 argv = nargv;
 */
 
-    int ret;
     pid_t pid;
     chsc_args* argsp;
     char scin[SCRN_LEN];
     int (*uninitp)();
     int (*initp)(int, char**, char**);
 
+    int ret = 0;
     size_t sep_ind = 0;
 
     for (int i = 1; i < argc; i++)
@@ -49,10 +49,6 @@ argv = nargv;
         MEexecve(argv[sep_ind + 2], argv + sep_ind + 2, envp);
     }
 
-    chsc_threads = 0;
-    MEsem_init(&chsc_threads_sem, 0, 1);
-    MEsem_init(&chsc_finished_sem, 0, 0);
-
     chsc_handle = MEdlopen(argv[sep_ind + 1], RTLD_NOW);
     chsc_prefix = MEdlsym(chsc_handle, SCRN_PRE);
     chsc_prefix_len = MEstrlen(chsc_prefix);
@@ -66,12 +62,14 @@ argv = nargv;
         if (ret)
         {
             MEkill(pid, SIGKILL);
-            MEsem_destroy(&chsc_threads_sem);
-            MEsem_destroy(&chsc_finished_sem);
             MEdlclose(chsc_handle);
             return ret;
         }
     }
+
+    chsc_threads = 0;
+    MEsem_init(&chsc_threads_sem, 0, 1);
+    MEsem_init(&chsc_finished_sem, 0, 0);
 
     argsp = MEmalloc(sizeof(chsc_args));
     argsp -> pid = pid;
@@ -87,7 +85,6 @@ argv = nargv;
     MEsem_destroy(&chsc_threads_sem);
     MEsem_destroy(&chsc_finished_sem);
 
-    ret = 0;
     MEstrcpy(scin + chsc_prefix_len, SCUIN_SUF);
     uninitp = dlsym(chsc_handle, scin);
     if (uninitp)

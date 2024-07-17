@@ -6,9 +6,7 @@ test/hw4
 test/hwx
 test/libcheuid.so
 test/libtrace_write.so
-src/8spc2tab
 compile_flags.txt
-Makefile_8spc
 .c_bin
 .lightly
 #----------------

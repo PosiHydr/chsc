@@ -24,9 +24,9 @@
 
 typedef struct
 {
-    pid_t		pid;
-    pthread_t	tid;
-    long		inbak;
+    pid_t       pid;
+    pthread_t   tid;
+    long        inbak;
     struct iovec iov;
     struct user_regs_struct regs;
     struct __ptrace_syscall_info info;
