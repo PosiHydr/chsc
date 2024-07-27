@@ -4,6 +4,7 @@ const char chsc_pre[] = "chsc_";
 
 ssize_t chsc_write(int fd, void* p, size_t n)
 {
+    pid_t pid = CHSC_GETPID();
     struct __ptrace_syscall_info info;
 
     MEptrace(PTRACE_SYSCALL, pid, 0, 0);

@@ -16,7 +16,6 @@ void* chsc_thread(chsc_args* argsp)
     MEsem_post(&chsc_threads_sem);
 
     MEstrcpy(scrn, chsc_prefix);
-    *(pid_t*)MEdlsym(chsc_handle, SCRR_PID) = pid;
 
     MEpthread_detach(argsp -> tid);
 
@@ -51,6 +50,7 @@ void* chsc_thread(chsc_args* argsp)
             scrp = dlsym(chsc_handle, scrn);
             if (scrp)
             {
+                errno = pid;
                 REG_TYPE ret = ((chsc_syscall)scrp)((argsp -> info).entry.args[0], (argsp -> info).entry.args[1], (argsp -> info).entry.args[2], (argsp -> info).entry.args[3], (argsp -> info).entry.args[4], (argsp -> info).entry.args[5]);
                 MEptrace(PTRACE_GETREGSET, pid, NT_PRSTATUS, &(argsp -> iov));
                 (argsp -> regs).REG_RET = ret;

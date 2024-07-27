@@ -22,6 +22,7 @@ int chsc_uninit()
 
 uid_t chsc_geteuid()
 {
+    pid_t pid = CHSC_GETPID();
     MEptrace(PTRACE_SYSCALL, pid, 0, 0);
     MEwaitpid(pid, 0, WUNTRACED);
     return euid_tar;

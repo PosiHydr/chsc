@@ -10,6 +10,6 @@
 #include <sys/types.h>
 #include <sys/ptrace.h>
 
-__thread pid_t pid;
+#define CHSC_GETPID() errno
 
 #endif
