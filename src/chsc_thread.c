@@ -43,7 +43,7 @@ void* chsc_thread(chsc_args* argsp)
             chsc_detach(nargsp);
             MEpthread_create(&(nargsp -> tid), 0, (void* (*)(void*))chsc_thread, nargsp);
         }
-        MEptrace(PTRACE_GET_SYSCALL_INFO, pid, sizeof(struct __ptrace_syscall_info), &(argsp -> info));
+        MEptrace(PTRACE_GET_SYSCALL_INFO, pid, sizeof(struct ptrace_syscall_info), &(argsp -> info));
         if ((WSTOPSIG(stat) & 0x80) && ((argsp -> info).op == PTRACE_SYSCALL_INFO_ENTRY) && ((argsp -> info).entry.nr < SC_MAX) && (scname[(argsp -> info).entry.nr] != 0))
         {
             MEstrcpy(scrn + chsc_prefix_len, scname[(argsp -> info).entry.nr]);

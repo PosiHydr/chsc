@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/ptrace.h>
+#include <linux/ptrace.h>
 
 #define CHSC_GETPID() errno
 
