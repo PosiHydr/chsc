@@ -2,7 +2,6 @@
 #define _CHSC_H
 
 #include <elf.h>
-#include <dlfcn.h>
 #include <signal.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -12,13 +11,13 @@
 #include <sys/types.h>
 #include <semaphore.h>
 #include <sys/ptrace.h>
+#include <linux/ptrace.h>
 
-#include "arch.h"
 #include "merr.h"
+#include "../arch/arch.h"
 
 #define SCRN_LEN    64
 #define SCRN_PRE    "chsc_pre"
-#define SCRR_PID    "pid"
 #define SCIN_SUF    "init"
 #define SCUIN_SUF   "uninit"
 
@@ -29,7 +28,7 @@ typedef struct
     long        inbak;
     struct iovec iov;
     struct user_regs_struct regs;
-    struct __ptrace_syscall_info info;
+    struct ptrace_syscall_info info;
 } chsc_args;
 
 typedef REG_TYPE (*chsc_syscall)(REG_TYPE, REG_TYPE, REG_TYPE, REG_TYPE, REG_TYPE, REG_TYPE);

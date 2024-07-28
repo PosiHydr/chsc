@@ -38,4 +38,5 @@ done
 
 echo "};" >> $2
 rm $2.tmp
+echo ${pwn}
 exit 0

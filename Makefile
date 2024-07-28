@@ -6,10 +6,13 @@ bin:
 
 src/chsc.c: include/chsc.h arch/scname.c src/chsc_detach.c src/chsc_thread.c
 
-include/chsc.h: include/arch.h include/merr.h
+include/chsc.h: arch/arch.h include/merr.h
 
-arch/scname.c: src/gen_scname arch
-		bash src/gen_scname arch arch/scname.c
+arch/arch.h: src/gen_arch arch
+		bash src/gen_arch arch
+
+arch/scname.c: src/gen_arch arch
+		bash src/gen_arch arch
 
 src/chsc_detach.c: include/chsc.h
 
@@ -33,10 +36,10 @@ test/hwx: test/hwx.c
 test/libcheuid.so: test/libcheuid.c
 		gcc test/libcheuid.c -Wall -fPIC -shared -o test/libcheuid.so
 
+test/libcheuid.c: test/chsc_dev.h
+
 test/libtrace_write.so: test/libtrace_write.c
 		gcc test/libtrace_write.c -Wall -fPIC -shared -o test/libtrace_write.so
-
-test/libcheuid.c: test/chsc_dev.h
 
 test/libtrace_write.c: test/chsc_dev.h
 
@@ -47,4 +50,4 @@ all: bin/chsc test
 
 .PHONY: clean
 clean:
-		rm -rf arch/scname.c bin test/hw test/hw2 test/hw4 test/hwx test/libcheuid.so test/libtrace_write.so
+		rm -rf arch/arch.h arch/scname.c bin test/hw test/hw2 test/hw4 test/hwx test/libcheuid.so test/libtrace_write.so

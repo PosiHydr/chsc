@@ -1,3 +1,4 @@
+arch/arch.h
 arch/scname.c
 bin
 test/hw
