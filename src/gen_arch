@@ -2,33 +2,36 @@
 
 # Generate files related architecture
 
-ARCH_DIR=$1
-SRC=src
+ARCH_DIR="$1"
+ARCH_H=arch.h
+ARCH_TBL=arch.tbl
+ARCH_GENERAL_H=arch_general.h
+SRC_DIR=src
+SCNAME_C=scname.c
 SC_H2ARR=sc_h2arr
 SC_TBL2ARR=sc_tbl2arr
-MACH_ARCH_BITS_TBL=arch.tbl
 
 if (($# != 1)); then
     echo "Usage: $0 ARCH_DIR" >& 2
     exit 1
 fi
 
-if [ ! -d ${ARCH_DIR} ]; then
+if [ ! -d "${ARCH_DIR}" ]; then
     echo "Architecture directory \"${ARCH_DIR}\" not found" >& 2
     exit 1
 fi
 
-if [ ! -x ${ARCH_DIR} ]; then
+if [ ! -x "${ARCH_DIR}" ]; then
     echo "Architecture directory \"${ARCH_DIR}\" cannot be execved" >& 2
     exit 1
 fi
 
 arch="#"
 mach=$(uname -m)
-nlines=$(wc -l < ${ARCH_DIR}/${MACH_ARCH_BITS_TBL})
+nlines=$(wc -l < "${ARCH_DIR}/${ARCH_TBL}")
 
 for ((i=1; i<=nlines; i++)); do
-    items=($(sed -n "${i}p;" ${ARCH_DIR}/${MACH_ARCH_BITS_TBL}))
+    items=($(sed -n "${i}p;" "${ARCH_DIR}/${ARCH_TBL}"))
     if [ ${items[0]} == ${mach} ]; then
         arch=${items[1]}
         bits=${items[2]}
@@ -45,14 +48,14 @@ if [ ${arch} == "#" ]; then
     exit 1
 fi
 
-if [ -f ${ARCH_DIR}/sctblsrc_${arch}_${bits}.tbl ]; then
-    sc_max=$(bash ${SRC}/${SC_TBL2ARR} ${ARCH_DIR}/sctblsrc_${arch}_${bits}.tbl ${ARCH_DIR}/scname.c)
-elif [ -f ${ARCH_DIR}/sctblsrc_${arch}_${bits}.h ]; then
-    sc_max=$(bash ${SRC}/${SC_H2ARR} ${ARCH_DIR}/sctblsrc_${arch}_${bits}.h ${ARCH_DIR}/scname.c)
+if [ -f "${ARCH_DIR}/sctblsrc_${arch}_${bits}.tbl" ]; then
+    sc_max=$(bash "${SRC_DIR}/${SC_TBL2ARR}" "${ARCH_DIR}/sctblsrc_${arch}_${bits}.tbl" "${ARCH_DIR}/${SCNAME_C}")
+elif [ -f "${ARCH_DIR}/sctblsrc_${arch}_${bits}.h" ]; then
+    sc_max=$(bash "${SRC_DIR}/${SC_H2ARR}" "${ARCH_DIR}/sctblsrc_${arch}_${bits}.h" "${ARCH_DIR}/${SCNAME_C}")
 else
-    echo "Table ${ARCH_DIR}/sctblsrc_${arch}_${bits}.tbl or header ${ARCH_DIR}/sctblsrc_$ {arch}_${bits}.h not found" >& 2
+    echo "Table \"${ARCH_DIR}/sctblsrc_${arch}_${bits}.tbl\" or header \"${ARCH_DIR}/sctblsrc_${arch}_${bits}.h\" not found" >& 2
     exit 1
 fi
 
-sed "s/__LOOP_CODE__/${loop_code}/;s/__REG_TYPE__/${reg_type}/;s/__REG_RET__/${reg_ret}/;s/__REG_PC__/${reg_pc}/;s/__SC_MAX__/${sc_max}/;" ${ARCH_DIR}/arch_general.h > ${ARCH_DIR}/arch.h
+sed "s/__LOOP_CODE__/${loop_code}/;s/__REG_TYPE__/${reg_type}/;s/__REG_RET__/${reg_ret}/;s/__REG_PC__/${reg_pc}/;s/__SC_MAX__/${sc_max}/;" "${ARCH_DIR}/${ARCH_GENERAL_H}" > "${ARCH_DIR}/${ARCH_H}"
 exit 0

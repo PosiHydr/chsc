@@ -8,35 +8,38 @@ if (($# != 2)); then
     exit 1
 fi
 
-if [ ! -f $1 ]; then
-    echo "Table \"$1\" not found" >& 2
+TBL="$1"
+CFILE="$2"
+
+if [ ! -f "${TBL}" ]; then
+    echo "Table \"${TBL}\" not found" >& 2
     exit 1
 fi
 
-if [ ! -r $1 ]; then
-    echo "Table \"$1\" cannot be read" >& 2
+if [ ! -r "${TBL}" ]; then
+    echo "Table \"${TBL}\" cannot be read" >& 2
     exit 1
 fi
 
-sed 's/#.*//g;/^\s*$/d;' $1 > $2.tmp
-echo "char* scname[#] = {" > $2
+sed 's/#.*//;/^\s*$/d;' "${TBL}" > "${CFILE}.tmp"
+echo "char* scname[#] = {" > "${CFILE}"
 pwn=0
-nlines=$(wc -l < $2.tmp)
+nlines=$(wc -l < "${CFILE}.tmp")
 
 for ((i=1; i<=nlines; i++)); do
-    items=($(sed -n "${i}p;" $2.tmp))
+    items=($(sed -n "${i}p;" "${CFILE}.tmp"))
     while [ ${pwn} != ${items[0]} ]; do
-        echo -e "\t0," >> $2
+        echo -e "\t0," >> "${CFILE}"
         ((pwn++))
     done
-    echo -e "\t\"${items[2]}\"," >> $2
+    echo -e "\t\"${items[2]}\"," >> "${CFILE}"
     ((pwn++))
     if ((i == nlines)); then
-        sed -i "1s/#/${pwn}/;$((${pwn} + 1))s/,\$//;" $2
+        sed -i "1s/#/${pwn}/;$((${pwn} + 1))s/,\$//;" "${CFILE}"
     fi
 done
 
-echo "};" >> $2
-rm $2.tmp
+echo "};" >> "${CFILE}"
+rm "${CFILE}.tmp"
 echo ${pwn}
 exit 0
