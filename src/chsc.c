@@ -82,8 +82,8 @@ argv = nargv;
 
     MEsem_wait(&chsc_finished_sem);
     MEsem_wait(&chsc_threads_sem);
-    MEsem_destroy(&chsc_threads_sem);
     MEsem_destroy(&chsc_finished_sem);
+    MEsem_destroy(&chsc_threads_sem);
 
     MEstrcpy(scin + chsc_prefix_len, SCUIN_SUF);
     uninitp = dlsym(chsc_handle, scin);

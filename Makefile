@@ -50,4 +50,4 @@ all: bin/chsc test
 
 .PHONY: clean
 clean:
-		rm -rf arch/arch.h arch/scname.c bin test/hw test/hw2 test/hw4 test/hwx test/libcheuid.so test/libtrace_write.so
+		rm -rf arch/*.tmp arch/arch.h arch/scname.c bin test/hw test/hw2 test/hw4 test/hwx test/libcheuid.so test/libtrace_write.so

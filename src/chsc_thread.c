@@ -3,7 +3,7 @@
 void* chsc_thread(chsc_args* argsp)
 {
     int stat;
-    void* scrp;
+    chsc_syscall scrp;
     chsc_args* nargsp;
     char scrn[SCRN_LEN];
 
@@ -51,7 +51,7 @@ void* chsc_thread(chsc_args* argsp)
             if (scrp)
             {
                 errno = pid;
-                REG_TYPE ret = ((chsc_syscall)scrp)((argsp -> info).entry.args[0], (argsp -> info).entry.args[1], (argsp -> info).entry.args[2], (argsp -> info).entry.args[3], (argsp -> info).entry.args[4], (argsp -> info).entry.args[5]);
+                REG_TYPE ret = scrp((argsp -> info).entry.args[0], (argsp -> info).entry.args[1], (argsp -> info).entry.args[2], (argsp -> info).entry.args[3], (argsp -> info).entry.args[4], (argsp -> info).entry.args[5]);
                 MEptrace(PTRACE_GETREGSET, pid, NT_PRSTATUS, &(argsp -> iov));
                 (argsp -> regs).REG_RET = ret;
                 MEptrace(PTRACE_SETREGSET, pid, NT_PRSTATUS, &(argsp -> iov));

@@ -1,3 +1,4 @@
+arch/*.tmp
 arch/arch.h
 arch/scname.c
 bin
