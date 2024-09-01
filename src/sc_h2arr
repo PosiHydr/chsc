@@ -1,0 +1,45 @@
+#! /usr/bin/env bash
+
+# Convert syscall header to char*[] which indexes
+# are syscall numbers and values are syscall names
+
+if (($# != 2)); then
+    echo "Usage: $0 <*.h> <*.c>" >& 2
+    exit 1
+fi
+
+HEADER="$1"
+CFILE="$2"
+
+if [ ! -f "${HEADER}" ]; then
+    echo "Header \"${HEADER}\" not found" >& 2
+    exit 1
+fi
+
+if [ ! -r "${HEADER}" ]; then
+    echo "Header \"${HEADER}\" cannot be read" >& 2
+    exit 1
+fi
+
+sed -n '/^\s*#\s*define\s*__NR_/{s/^\s*#\s*define\s*__NR_//;p;};' "${HEADER}" > "${CFILE}.tmp"
+echo "char* scname[#] = {" > "${CFILE}"
+pwn=0
+nlines=$(wc -l < "${CFILE}.tmp")
+
+for ((i=1; i<=nlines; i++)); do
+    items=($(sed -n "${i}p;" "${CFILE}.tmp"))
+    while [ ${pwn} != ${items[1]} ]; do
+        echo -e "\t0," >> "${CFILE}"
+        ((pwn++))
+    done
+    echo -e "\t\"${items[0]}\"," >> "${CFILE}"
+    ((pwn++))
+    if ((i == nlines)); then
+        sed -i "1s/#/${pwn}/;$((${pwn} + 1))s/,\$//;" "${CFILE}"
+    fi
+done
+
+echo "};" >> "${CFILE}"
+rm "${CFILE}.tmp"
+echo ${pwn}
+exit 0

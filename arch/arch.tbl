@@ -1,0 +1,2 @@
+x86_64      x86     64      0xfeeb      uint64_t    rax         rip
+aarch64     arm64   64      0x14000000  uint64_t    regs[0]     pc
